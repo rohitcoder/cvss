@@ -13,7 +13,14 @@ jobs:
       project: ${{ steps.project.outputs.value }}
     steps:
       - id: project_version
-        run: echo ::set-output name=value::${GITHUB_REF/refs\/tags\//}
+        run: |
+          VERSION=${GITHUB_REF/refs\/tags\//}
+          SANITIZED_VERSION=${VERSION#v}
+          if ! [[ "$SANITIZED_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid version format: $SANITIZED_VERSION"
+            exit 1
+          fi
+          echo ::set-output name=value::$SANITIZED_VERSION
       - id: project
         run: echo ::set-output name=value::$(echo ${GITHUB_REPOSITORY#*/} | tr A-Z a-z)
 
@@ -28,22 +35,31 @@ jobs:
         with:
           token: ${{ secrets.GPR_TOKEN }}
 
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         with:
           node-version: 18
           registry-url: 'https://registry.npmjs.org'
 
+      - run: node --version
+      - run: npm --version
+
+      - run: npm install -g npm@latest
+      - run: npm cache clean --force
       - run: npm version --no-git-tag-version "$VERSION"
       - run: npm ci -q
+      - run: npm run build
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         with:
+          node-version: 18
           registry-url: 'https://npm.pkg.github.com'
           scope: '@rohit_coder'
 
+      - run: node --version
+      - run: npm --version
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GPR_TOKEN }}
