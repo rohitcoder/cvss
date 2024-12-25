@@ -60,6 +60,6 @@ jobs:
 
       - run: node --version
       - run: npm --version
-      - run: npm publish --access public
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GPR_TOKEN }}
