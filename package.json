@@ -58,7 +58,7 @@
     "build": "tsc && rollup -c rollup.config.js",
     "prepublishOnly": "npm run build"
   },
-  "homepage": "https://github.com/NeuraLegion/cvss#readme",
+  "homepage": "https://github.com/rohitcoder/cvss#readme",
   "dependencies": {
     "tslib": "~2.4.0"
   },
