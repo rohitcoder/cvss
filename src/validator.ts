@@ -9,12 +9,68 @@ import {
   baseMetrics,
   environmentalMetricValues,
   environmentalMetrics,
+  expectedMetricOrder,
   temporalMetricValues,
   temporalMetrics
 } from './models';
 import { humanizeBaseMetric, humanizeBaseMetricValue } from './humanizer';
 import { parseMetricsAsMap, parseVector, parseVersion } from './parser';
-import { validateVectorV4 } from './score-calculator';
+
+
+/**
+ * Validates a CVSS vector string according to expected metrics and mandatory requirements.
+ * @param {string} vectorString - The CVSS vector string to validate.
+ * @returns {{ valid: boolean, error?: string, selectedMetrics?: Record<string, string> }}
+ *   Returns an object indicating whether the vector is valid, with an error message if invalid.
+ */
+export const validateVectorV4 = (vectorString: string | null): { valid: boolean; error?: string; selectedMetrics?: Record<string, string> } => {
+  let metrics = vectorString ? vectorString.split("/") : [];
+  const prefix = metrics[0];
+  if (prefix !== "CVSS:4.0") {
+    return { valid: false, error: "Invalid vector prefix" };
+  }
+
+  metrics.shift();
+
+  let expectedIndex = 0;
+  const toSelect: any = {};
+  const expectedEntries = Object.entries(expectedMetricOrder);
+  const mandatoryMetrics = ['AV', 'AC', 'AT', 'PR', 'UI', 'VC', 'VI', 'VA', 'SC', 'SI', 'SA'];
+
+  for (const metric of metrics) {
+    const [key, value] = metric.split(":");
+    const expectedEntry = expectedEntries.find(entry => entry[0] === key);
+
+    if (key in toSelect) {
+      return { valid: false, error: `Invalid vector, repeated metric: ${key}` };
+    }
+
+    while (expectedIndex < expectedEntries.length && expectedEntries[expectedIndex][0] !== key) {
+      expectedIndex++;
+    }
+    if (expectedIndex >= expectedEntries.length) {
+      return { valid: false, error: `Invalid vector, metric out of sequence: ${key}` };
+    }
+
+    if (!expectedEntry) {
+      return { valid: false, error: `Invalid vector, unexpected metric: ${key}` };
+    }
+
+    if (!expectedEntry[1].includes(value)) {
+      return { valid: false, error: `Invalid vector, for key ${key}, value ${value} is not in [${expectedEntry[1]}]` };
+    }
+
+    toSelect[key] = value;
+  }
+
+  const missingMandatoryMetrics = mandatoryMetrics.filter(metric => !(metric in toSelect));
+  if (missingMandatoryMetrics.length > 0) {
+    return { valid: false, error: `Invalid vector, missing mandatory metrics: ${missingMandatoryMetrics.join(', ')}` };
+  }
+
+  return { valid: true, selectedMetrics: toSelect };
+};
+
 
 export const validateVersion = (versionStr: string | null): void => {
   if (!versionStr) {
