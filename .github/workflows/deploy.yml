@@ -43,7 +43,7 @@ jobs:
       - run: node --version
       - run: npm --version
 
-      - run: npm install -g npm@latest
+      - run: npm install -g npm@10
       - run: npm cache clean --force
       - run: npm version --no-git-tag-version "$VERSION"
       - run: npm ci -q
