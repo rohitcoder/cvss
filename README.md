@@ -22,7 +22,7 @@ Score is: [3.8](https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:
 
 CVSS specification defines three metric groups: `Base`, `Temporal`, and `Environmental`, but only `Base` metrics are supported by given library for now.
 
-Supported CVSS versions: [3.0](https://www.first.org/cvss/v3-0/) and [3.1](https://www.first.org/cvss/v3-1/)
+Supported CVSS versions: [3.0](https://www.first.org/cvss/v3-0/) and [3.1](https://www.first.org/cvss/v3-1/) and [4.0](https://www.first.org/cvss/v4-0/)
 
 ## CVSS V4 Support
 
