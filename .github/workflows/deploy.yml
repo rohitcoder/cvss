@@ -56,7 +56,7 @@ jobs:
         with:
           node-version: 18
           registry-url: 'https://npm.pkg.github.com'
-          scope: '@rohit_coder'
+          scope: '@rohitcoder'
 
       - run: node --version
       - run: npm --version
