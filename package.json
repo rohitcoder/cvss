@@ -1,0 +1,94 @@
+{
+  "name": "@rohit_coder/cvss",
+  "version": "0.1.0",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rohitcoder/cvss.git"
+  },
+  "author": {
+    "name": "Rohit Kumar"
+  },
+  "keywords": [
+    "security",
+    "typescript",
+    "score",
+    "cvss",
+    "cvssv3",
+    "cvss3"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rohitcoder/cvss/issues"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "lint-staged",
+      "post-commit": "git update-index --again"
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "files": [
+    "dist/**"
+  ],
+  "main": "./dist/bundle.umd.js",
+  "module": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "scripts": {
+    "clean": "rm -rf ./dist",
+    "semantic-release": "semantic-release",
+    "lint": "eslint -c .eslintrc  --ext .ts src && eslint -c ./tests/.eslintrc  --ext .ts tests",
+    "format": "prettier --check src tests",
+    "format:write": "prettier --write .",
+    "test": "cross-env TS_NODE_PROJECT=./tsconfig.spec.json mocha -r ts-node/register -r tsconfig-paths/register tests/**/*.spec.ts",
+    "build": "tsc && rollup -c rollup.config.js",
+    "prepublishOnly": "npm run build"
+  },
+  "homepage": "https://github.com/NeuraLegion/cvss#readme",
+  "dependencies": {
+    "tslib": "~2.4.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.0.2",
+    "@commitlint/config-conventional": "^17.0.2",
+    "@types/chai": "^4.3.1",
+    "@types/chai-as-promised": "^7.1.5",
+    "@types/debug": "^4.1.7",
+    "@types/mocha": "~9.1.1",
+    "@types/node": "~17.0.42",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "@typescript-eslint/parser": "^5.27.1",
+    "chai": "~4.3.6",
+    "chai-as-promised": "^7.1.1",
+    "cross-env": "^7.0.3",
+    "debug": "^4.3.4",
+    "eslint": "^8.17.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.1",
+    "mocha": "~10.0.0",
+    "nyc": "~15.1.0",
+    "prettier": "~2.6.2",
+    "rollup": "^2.75.6",
+    "rollup-plugin-typescript2": "^0.32.1",
+    "semantic-release": "^19.0.3",
+    "ts-node": "~10.8.1",
+    "typescript": "^4.7.3"
+  }
+}
