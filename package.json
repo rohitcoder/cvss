@@ -11,11 +11,13 @@
   },
   "keywords": [
     "security",
-    "typescript",
+    "cybersecurity",
+    "vulnerability-management",
     "score",
     "cvss",
     "cvssv3",
-    "cvss3"
+    "cvss3",
+    "cvss4"
   ],
   "license": "MIT",
   "bugs": {

@@ -1,166 +1,139 @@
 
-# cvss
+# CVSS
 
-The Common Vulnerability Scoring System ([CVSS](https://www.first.org/cvss/)) [base](https://www.first.org/cvss/specification-document#Base-Metrics) [score](https://www.first.org/cvss/specification-document#1-2-Scoring) calculator and validator library written in [TypeScript](https://www.typescriptlang.org/).
+The **Common Vulnerability Scoring System (CVSS)** is a [scoring framework](https://www.first.org/cvss/) that provides numerical scores to assess the severity of software vulnerabilities. This TypeScript-based library offers support for CVSS versions **3.0**, **3.1**, and **4.0** for calculating and validating Base Scores.
 
-## Basics 🧾
+---
 
-CVSS outputs numerical scores, indicating severity of vulnerability, based on some principal technical vulnerability characteristics.
-Its outputs include numerical scores indicating the severity of a vulnerability relative to other vulnerabilities. [Link](https://www.first.org/cvss/v3.1/specification-document#Introduction)
+## Basics
 
-The CVSS v3 vector string begins with the label `CVSS:` and numeric representation of the version.
-After version string, it contains a set of `/`-separated CVSS metrics.
-Each metric consists of name and value (both abbreviated) separated with ':'.
+CVSS produces numerical scores based on principal vulnerability characteristics to determine the severity of a vulnerability. These scores help compare the relative risks of different vulnerabilities.
 
-### Sample
+A CVSS vector string consists of:
 
-Sample CVSS v3.1 vector string: `CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:L/I:L/A:N`
+1. A version identifier starting with `CVSS:`.
+2. A set of `/`-separated metrics. Each metric is represented as a key-value pair (`metric:value`).
 
-Score is: [3.8](https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:L/I:L/A:N), severity: [Low](https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:L/I:L/A:N)
+### Example Vector String
 
-### Current library limitations 🚧
+**Sample CVSS v3.1 vector string**:  
+`CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:L/I:L/A:N`
 
-CVSS specification defines three metric groups: `Base`, `Temporal`, and `Environmental`, but only `Base` metrics are supported by given library for now.
+**Base Score**: [3.8](https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:L/I:L/A:N)  
+**Severity**: [Low](https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:L/I:L/A:N)
 
-Supported CVSS versions: [3.0](https://www.first.org/cvss/v3-0/) and [3.1](https://www.first.org/cvss/v3-1/) and [4.0](https://www.first.org/cvss/v4-0/)
+---
 
-## CVSS V4 Support
+## Features
 
-This library now includes support for CVSS V4, thanks to contributions by **Rohit Kumar**. 
+1. **Supported CVSS Versions**:  
+   - [CVSS 3.0](https://www.first.org/cvss/v3-0/)  
+   - [CVSS 3.1](https://www.first.org/cvss/v3-1/)  
+   - [CVSS 4.0](https://www.first.org/cvss/v4-0/)  
 
-## Install 🚀
+2. **Metric Group Coverage**:  
+   Currently supports **Base Metrics**. Future updates may include **Temporal** and **Environmental Metrics**.
 
-`npm i --save @rohit_coder/cvss`
+---
 
-## API
+## Installation
 
-<details>
-<summary>Score Calculator</summary>
+Install the library using npm:
 
-`calculateBaseScore(cvssString): number`
-
-Calculates [Base Score](https://www.first.org/cvss/v3.1/specification-document#7-1-Base-Metrics-Equations),
-which depends on sub-formulas for Impact Sub-Score (ISS), Impact, and Exploitability,
-
-`calculateIss(metricsMap): number`
-
-Calculates [Impact Sub-Score (ISS)](https://www.first.org/cvss/v3.1/specification-document#7-1-Base-Metrics-Equations)
-
-`calculateImpact(metricsMap, iss): number`
-
-Calculates [Impact](https://www.first.org/cvss/v3.1/specification-document#7-1-Base-Metrics-Equations)
-
-`calculateExploitability(metricsMap): number`
-
-Calculates [Exploitability](https://www.first.org/cvss/v3.1/specification-document#7-1-Base-Metrics-Equations)
-
-</details>
-
-<details>
-<summary>Validator</summary>
-
-`validate(cvssString): void`
-
-Throws an Error if given CVSS string is either invalid or unsupported.
-
-Error contains verbose message with error details. Sample error messages:
-
-- CVSS vector must start with "CVSS:"
-- Invalid CVSS string. Example: CVSS:3.0/AV:A/AC:H/PR:H/UI:R/S:U/C:N/I:N/A:L
-- Unsupported CVSS version: 2.0. Only 3.0, 3.1, and 4.0 are supported
-- Duplicated metric: "AC:L"
-- Missing mandatory CVSS base metric C (Confidentiality)
-- Unknown CVSS metric "X". Allowed metrics: AV, AC, PR, UI, S, C, I, A
-- Invalid value for CVSS metric PR (Privileges Required): Y. Allowed values: N (None), L (Low), H (High)
-</details>
-
-<details>
-<summary>Humanizer</summary>
-
-`humanizeBaseMetric(metric)`
-
-Return un-abbreviated metric name: e.g. 'Confidentiality' for input 'C'
-
-`humanizeBaseMetricValue(value, metric)`
-
-Return un-abbreviated metric value: e.g. 'Network' for input ('AV', 'N')
-
-</details>
-
-## Usage
-
-<details>
-<summary>ECMAScript 2015, Typescript modules</summary>
-
-```
-import { calculateBaseScore } from '@rohit_coder/cvss';
-
-console.log('score: ', calculateBaseScore('CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N'));
+```bash
+npm install --save cvss4
 ```
 
-</details>
+---
 
-<details>
-<summary>NodeJS (CommonJS module)</summary>
+## API Reference
 
-```
-const cvss = require('@rohit_coder/cvss');
+### **Score Calculation**
 
+- `calculateBaseScore(cvssString): number`  
+  Computes the Base Score of a CVSS vector string.  
+  Example:  
+  ```javascript
+  import { calculateBaseScore } from 'cvss4';
+  console.log(calculateBaseScore('CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N'));
+  ```
+
+- `calculateIss(metricsMap): number`  
+  Calculates the [Impact Sub-Score (ISS)](https://www.first.org/cvss/v3.1/specification-document#7-1-Base-Metrics-Equations).
+
+- `calculateImpact(metricsMap, iss): number`  
+  Computes the [Impact](https://www.first.org/cvss/v3.1/specification-document#7-1-Base-Metrics-Equations).
+
+- `calculateExploitability(metricsMap): number`  
+  Computes the [Exploitability](https://www.first.org/cvss/v3.1/specification-document#7-1-Base-Metrics-Equations).
+
+---
+
+### **Validation**
+
+- `validate(cvssString): void`  
+  Validates the CVSS vector string. Throws an error if the string is invalid or unsupported.  
+  Example:  
+  ```javascript
+  import { validate } from 'cvss4';
+  validate('CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:L/I:L/A:N');
+  ```
+
+---
+
+### **Humanization**
+
+- `humanizeBaseMetric(metric: string): string`  
+  Converts an abbreviated metric name to its full form.  
+  Example:  
+  ```javascript
+  humanizeBaseMetric('C'); // Returns: 'Confidentiality'
+  ```
+
+- `humanizeBaseMetricValue(value: string, metric: string): string`  
+  Converts an abbreviated metric value to its full form.  
+  Example:  
+  ```javascript
+  humanizeBaseMetricValue('N', 'AV'); // Returns: 'Network'
+  ```
+
+---
+
+## Usage Examples
+
+### **Node.js (CommonJS)**
+
+```javascript
+const cvss = require('cvss4');
 console.log(cvss.calculateBaseScore('CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N'));
 ```
 
-</details>
+### **Node.js (ES Modules)**
 
-<details>
-
-<summary>NodeJS (experimental ESM support)</summary>
-
-`usage.mjs` file:
-
-```
-import cvss from '@rohit_coder/cvss';
-
-console.log(cvss.calculateBaseScore('CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N'));
+```javascript
+import { calculateBaseScore } from 'cvss4';
+console.log(calculateBaseScore('CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N'));
 ```
 
-Running: `node --experimental-modules ./usage.mjs`
+### **Browser (UMD)**
 
-</details>
-
-<details>
-<summary>Browser (globals from umd bundle)</summary>
-
-```
-<script src="./node_modules/@rohit_coder/cvss/dist/bundle.umd.js"></script>
+```html
+<script src="./node_modules/cvss4/dist/bundle.umd.js"></script>
 <script>
-  alert(`Score: ${cvss.calculateBaseScore('CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N')}`);
+  alert(cvss.calculateBaseScore('CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N'));
 </script>
 ```
 
-</details>
+---
 
-<details>
-<summary>Browser (ES modules)</summary>
+## Development
 
-```
-<script type="module">
-  import { calculateBaseScore } from './node_modules/@rohit_coder/cvss/dist/bundle.es.js';
-  alert(`Score: ${calculateBaseScore('CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N')}`);
-</script>
-```
+Contributions are welcome. Please ensure your code passes linting (`npm run lint`) and tests (`npm test`) before submitting a pull request.
 
-</details>
-
-## Development 🛠
-
-Issues and pull requests are highly welcome. 👍
-
-Please, don't forget to lint (`npm run lint`) and test (`npm t`) the code.
+---
 
 ## License
 
-Copyright © 2024 [Rohit Kumar](https://github.com/rohitcoder).
+This project is licensed under the MIT License. See the [LICENSE file](LICENSE) for details.
 
-This project is licensed under the MIT License - see the [LICENSE file](LICENSE) for details.
-
-Special credits to [NeuraLegion](https://github.com/NeuraLegion) for the initial version of this library.
+Special thanks to [NeuraLegion](https://github.com/NeuraLegion) for the initial version of this library.
