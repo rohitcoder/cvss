@@ -1,6 +1,6 @@
 {
-  "name": "@rohit_coder/cvss",
-  "version": "0.1.0",
+  "name": "cvss4",
+  "version": "0.1.1",
   "private": false,
   "repository": {
     "type": "git",
