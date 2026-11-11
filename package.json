@@ -1,5 +1,6 @@
 {
   "name": "cvss4",
+  "description": "CVSS 3.0, 3.1 and 4.0 score calculator for JavaScript and TypeScript. One function scores any vector: base, temporal, environmental and threat.",
   "version": "0.1.0",
   "private": false,
   "repository": {
@@ -17,7 +18,16 @@
     "cvss",
     "cvssv3",
     "cvss3",
-    "cvss4"
+    "cvss4",
+    "cvss31",
+    "cvss40",
+    "cvss-calculator",
+    "cvss-score",
+    "vulnerability",
+    "severity",
+    "cve",
+    "first",
+    "typescript"
   ],
   "license": "MIT",
   "bugs": {
