@@ -604,7 +604,7 @@ export const cvss_score = (cvssSelected: Record<string, string>, lookup: Record<
   // eq3 and eq6 are related
   if (eq3 == 1 && eq6 == 1) {
     // 11 --> 21
-    eq3eq6_next_lower_macro = `${eq1}${eq2}${eq3 + 1}${eq4}${eq5}${eq6 + 1}`;
+    eq3eq6_next_lower_macro = `${eq1}${eq2}${eq3 + 1}${eq4}${eq5}${eq6}`;
   } else if (eq3 == 0 && eq6 == 1) {
     // 01 --> 11
     eq3eq6_next_lower_macro = `${eq1}${eq2}${eq3 + 1}${eq4}${eq5}${eq6}`;

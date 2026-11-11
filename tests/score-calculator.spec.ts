@@ -67,6 +67,12 @@ const cvssTests = {
   'CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H': [9.5, 9.5, 9.5],
   'CVSS:4.0/AV:L/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H': [8.9, 8.9, 8.9],
   'CVSS:4.0/AV:L/AC:H/AT:P/PR:N/UI:A/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H/E:P/CR:M/AR:M': [7.1, 7.1, 7.1],
+  // issue #2: base and temporal are 9.9, environmental rounds to 10.0 per the 3.1 spec (matches FIRST calculator)
+  'CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H': [9.9, 9.9, 10.0],
+  // EQ3=1/EQ6=1 must step down to EQ3=2/EQ6=1 (scores from the FIRST v4.0 reference calculator)
+  'CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:L/VA:H/SC:N/SI:N/SA:N/CR:M/IR:M/AR:L': [7.9, 7.9, 7.9],
+  'CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N/CR:L/IR:M/AR:M': [7.8, 7.8, 7.8],
+  'CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:N/VC:H/VI:L/VA:N/SC:N/SI:N/SA:N/CR:L/IR:L/AR:L': [5.6, 5.6, 5.6],
 };
 
 /* eslint-enable @typescript-eslint/naming-convention */
@@ -106,13 +112,9 @@ describe('Calculate correctly temporal scores', () => {
     const cvss = entry[0];
     const temporalScore = entry[1][1];
     it(`should calculate a score of ${temporalScore} for ${cvss}`, () => {
-      // if cvss is not 3.0 or 3.1 then temporal score is the same as base score
-      if (cvss.startsWith('CVSS:3.0') && cvss.startsWith('CVSS:3.1')) {
-        expect(calculateTemporalScore(cvss)).to.equal(
-          calculateBaseScore(cvss)
-        );
-        return;
-      }
+      // temporal and environmental scores only exist for CVSS 3.x
+      if (cvss.startsWith('CVSS:4.0')) return;
+      expect(calculateTemporalScore(cvss)).to.equal(temporalScore);
     });
   });
 });
@@ -122,12 +124,8 @@ describe('Calculate correctly environmental scores', () => {
     const cvss = entry[0];
     const environmentalScore = entry[1][2];
     it(`should calculate a score of ${environmentalScore} for ${cvss}`, () => {
-      if (cvss.startsWith('CVSS:3.0') && cvss.startsWith('CVSS:3.1')) {
-        expect(calculateEnvironmentalScore(cvss)).to.equal(
-          calculateBaseScore(cvss)
-        );
-        return;
-      }
+      if (cvss.startsWith('CVSS:4.0')) return;
+      expect(calculateEnvironmentalScore(cvss)).to.equal(environmentalScore);
     });
   });
 });
